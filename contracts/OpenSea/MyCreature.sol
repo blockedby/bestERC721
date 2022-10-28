@@ -8,13 +8,13 @@ import "./ERC721Tradable.sol";
  * @title Creature
  * Creature - a contract for my non-fungible creatures.
  */
-contract Creature is ERC721Tradable {
-    constructor(address _proxyRegistryAddress)
-        ERC721Tradable("Creature", "OSC", _proxyRegistryAddress)
+contract MyCreature is ERC721Tradable {
+    constructor()
+        ERC721Tradable("Creature", "OSC", address(0))
     {}
 
     function baseTokenURI() override public pure returns (string memory) {
-        return "https://creatures-api.opensea.io/api/creature/";
+        return "ipfs://QmRn7cDx8gon5esi6xp6QvCDLAsQ9mawfbwmQRUQjK1sJV/";
     }
 
     function contractURI() public pure returns (string memory) {
