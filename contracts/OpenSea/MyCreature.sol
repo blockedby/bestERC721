@@ -16,7 +16,10 @@ contract MyCreature is ERC721Tradable {
     uint128 public immutable presealeStartTime;
     uint128 public constant presaleLength = 3 hours;
 
-    // mapping(address => bool) public mintedFromWhitelist;
+    uint256 public constant presalePrice = 0.25 ether;
+    // uint256 public constant publicSalePrice = 0.35 ether;
+
+    mapping(address => bool) public mintedFromWhitelist;
 
     receive() external payable {}
 
@@ -48,7 +51,7 @@ contract MyCreature is ERC721Tradable {
 
     // только одну сминтить можно или нет?
     function presaleMint(uint256 _numberOfTokens, bytes memory signature)
-        public
+        external
         payable
     {
         require(
@@ -62,15 +65,26 @@ contract MyCreature is ERC721Tradable {
                 block.timestamp < presealeStartTime + presaleLength,
             "Presale has not started yet"
         );
-        // require(
-        //     !mintedFromWhitelist[msg.sender],
-        //     "You are already minted from whitelist"
-        // );
+        require(
+            !mintedFromWhitelist[msg.sender],
+            "You are already minted from whitelist"
+        );
         require(
             totalSupply() + _numberOfTokens <= maxTotalSupply,
             "Exceeds max supply of tokens"
         );
+        require(
+            msg.value == presalePrice * _numberOfTokens, "Wrong amount of ETH"
+        );
+        mintedFromWhitelist[msg.sender] = true;
         for (uint256 i = 0; i < _numberOfTokens; i++) {
+            mintTo(msg.sender);
+        }
+    }
+
+    function ownerMintForSell() external onlyOwner {
+        uint256 numToMint = maxTotalSupply - totalSupply();
+        for (uint256 i = 0; i < numToMint; i++) {
             mintTo(msg.sender);
         }
     }
