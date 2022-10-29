@@ -5,23 +5,23 @@ import * as dot from "dotenv";
 dot.config();
 
 const config: HardhatUserConfig = {
-  networks: {
+	networks: {
 		mainnet: {
 			url: process.env.MAINNET_URL || "",
 			accounts:
 				process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
 		},
-    goerli: {
-      url: process.env.GOERLI_URL || "",
-      chainId: 5,
-      accounts:{
-        mnemonic: process.env.MNEMONIC || "",
+		goerli: {
+			url: process.env.GOERLI_URL || "",
+			chainId: 5,
+			accounts: {
+				mnemonic: process.env.MNEMONIC || "",
 				path: "m/44'/60'/0'/0",
 				initialIndex: 0,
 				count: 2,
 				passphrase: "",
-      }
-    },
+			}
+		},
 		bscTestnet: {
 			url: process.env.BSC_TESTNET_URL || "",
 			chainId: 97,
@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
 		},
 		hardhat: {
 			allowUnlimitedContractSize: false,
-      accounts: {
+			accounts: {
 				mnemonic: process.env.MNEMONIC || "",
 				path: "m/44'/60'/0'/0",
 				initialIndex: 0,
@@ -43,10 +43,11 @@ const config: HardhatUserConfig = {
 				passphrase: "",
 			},
 
-			// forking: {
-			// 	url: process.env.BSC_TESTNET_URL || "",
-			// 	// blockNumber: 14679873,
-			// }
+			forking: {
+				url: process.env.GOERLI_URL || "",
+				// url: process.env.ETH_URL || "",
+				// blockNumber: 14679873,
+			}
 		},
 		gananche: {
 			url: "http://localhost:7545",
@@ -62,10 +63,10 @@ const config: HardhatUserConfig = {
 	},
 
 	etherscan: {
-		apiKey:{
-		  bscTestnet: process.env.ETHERSCAN__BSC_API_KEY || "",
-      goerli: process.env.ETHERSCAN__MAINNET_API_KEY || "",
-		} ,
+		apiKey: {
+			bscTestnet: process.env.ETHERSCAN__BSC_API_KEY || "",
+			goerli: process.env.ETHERSCAN__MAINNET_API_KEY || "",
+		},
 	},
 
 
