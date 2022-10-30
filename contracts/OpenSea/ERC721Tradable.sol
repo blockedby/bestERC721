@@ -50,8 +50,9 @@ abstract contract ERC721Tradable is ERC721, ContextMixin, NativeMetaTransaction,
     /**
      * @dev Mints a token to an address with a tokenURI.
      * @param _to address of the future owner of the token
+     * Added "virtual" to allow overriding this function in the child contract
      */
-    function mintTo(address _to) public onlyOwner {
+    function mintTo(address _to) virtual public onlyOwner {
         uint256 currentTokenId = _nextTokenId.current();
         _nextTokenId.increment();
         _safeMint(_to, currentTokenId);

@@ -4,19 +4,23 @@ pragma solidity ^0.8.0;
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "./ERC721Tradable.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @title Creature
  * Creature - a contract for my non-fungible creatures.
  */
-contract MyCreature is ERC721Tradable {
+contract Voiders721 is ERC721Tradable {
     using ECDSA for bytes32;
 
     address public immutable whitelistChecker;
     uint256 public constant maxTotalSupply = 888;
     uint128 public immutable presealeStartTime;
-    uint128 public constant presaleLength = 3 hours;
+    uint128 public immutable presaleEndTime;
 
     uint256 public constant presalePrice = 0.25 ether;
+
+    string private _baseTokenURI;
     // uint256 public constant publicSalePrice = 0.35 ether;
 
     mapping(address => bool) public mintedFromWhitelist;
@@ -24,12 +28,12 @@ contract MyCreature is ERC721Tradable {
     receive() external payable {}
 
     constructor(
-        address _proxyRegistryAddress,
         uint128 _presealeStartTime,
         address[] memory _developers,
+        address _proxyRegistryAddress,
         address _treasury,
         address _whitelistChecker
-    ) ERC721Tradable("MyCreature", "CREATURE", _proxyRegistryAddress) {
+    ) ERC721Tradable("Name", "Ticker", _proxyRegistryAddress) {
         require(
             _whitelistChecker != address(0),
             "Whitelist checker cannot be 0"
@@ -40,13 +44,16 @@ contract MyCreature is ERC721Tradable {
         for (uint256 i = 0; i < devCount; i++) {
             address dev = _developers[i];
             require(dev != address(0), "Invalid developer address");
-            mintTo(dev);
+            super.mintTo(dev);
         }
-        require(_treasury == address(0), "Invalid treasury address");
+        console.log("Minted to developers");
+        console.log("treasury", _treasury);
+        require(_treasury != address(0), "Invalid treasury address");
         for (uint256 i = 0; i < 20; i++) {
-            mintTo(_treasury);
+            super.mintTo(_treasury);
         }
         presealeStartTime = _presealeStartTime;
+        presaleEndTime = _presealeStartTime + 3 hours;
     }
 
     // только одну сминтить можно или нет?
@@ -62,7 +69,7 @@ contract MyCreature is ERC721Tradable {
         );
         require(
             block.timestamp >= presealeStartTime &&
-                block.timestamp < presealeStartTime + presaleLength,
+                block.timestamp < presaleEndTime,
             "Presale has not started yet"
         );
         require(
@@ -74,23 +81,38 @@ contract MyCreature is ERC721Tradable {
             "Exceeds max supply of tokens"
         );
         require(
-            msg.value == presalePrice * _numberOfTokens, "Wrong amount of ETH"
+            msg.value == presalePrice * _numberOfTokens,
+            "Wrong amount of ETH"
         );
         mintedFromWhitelist[msg.sender] = true;
         for (uint256 i = 0; i < _numberOfTokens; i++) {
-            mintTo(msg.sender);
+            super.mintTo(msg.sender);
         }
     }
 
     function ownerMintForSell() external onlyOwner {
         uint256 numToMint = maxTotalSupply - totalSupply();
         for (uint256 i = 0; i < numToMint; i++) {
-            mintTo(msg.sender);
+            super.mintTo(msg.sender);
         }
     }
 
-    function baseTokenURI() public pure override returns (string memory) {
-        return "ipfs://QmRn7cDx8gon5esi6xp6QvCDLAsQ9mawfbwmQRUQjK1sJV/";
+    function mintTo(address _to) public override {
+        require(totalSupply() < maxTotalSupply, "Exceeds max supply of tokens");
+        require(block.timestamp >= presaleEndTime, "Presale has not ended yet");
+        super.mintTo(_to);
+    }
+
+    function baseTokenURI() public view override returns (string memory) {
+        return _baseURI();
+    }
+
+    function _baseURI() internal override view returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    function changeBaseTokenURI(string memory _newBaseTokenURI) public onlyOwner {
+        _baseTokenURI = _newBaseTokenURI;
     }
 
     function contractURI() public pure returns (string memory) {
