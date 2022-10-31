@@ -1,64 +1,59 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 
-import type { Voiders721, Voiders721__factory } from "../typechain-types";
+import type { VoidersGenesis, VoidersGenesis__factory } from "../typechain-types";
+function delay(ms: number) {
+  console.log("Pause for: ", ms / 1000);
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 async function main() {
   const [deployer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
 
+  const BASE_URI = "https://ipfs.io/ipfs/QmTrATxkJnRkAFAY9dHkGJ2qtHHnDksaVYsTjumdeijQZw?filename=1.json";
   const PROXY_REG_ADDRESS = ethers.constants.AddressZero;
-  const PRESALE_START_TIME = Date.now() + 1000;
-  console.log("PRESALE_START_TIME:", PRESALE_START_TIME);
+  const PRESALE_START_TIME = Date.now();
+  console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
+  const [owner, otherAccount,treasury] = await ethers.getSigners();
 
+  const signers = await ethers.getSigners();
 
-  // const [owner, otherAccount] = await ethers.getSigners();
-  const [owner, otherAccount, whitelister, treasury, developer1, developer2, developer3, developer4, developer5,
-    developer6, developer7, developer8, developer9, developer10,
-    developer11, developer12, developer13, developer14, developer15,
-    developer16, developer17, developer18, developer19, developer20,
-    developer21, developer22, developer23, developer24, developer25,
-    developer26, developer27, developer28
-  ] = await ethers.getSigners();
+  const whitelister  = ethers.Wallet.createRandom();
 
+  console.log("whitelister", whitelister.address);
+  console.log("whitelister", whitelister.privateKey);
 
-  // const VoidersFactory = (await ethers.getContractFactory("Voiders721")) as Voiders721__factory;
-  // const voiders = await VoidersFactory.deploy(
-  //   "Voiders",
-  //   "VDRS",
-  //   PRESALE_START_TIME,
-  //   [developer1.address, developer2.address, developer3.address, developer4.address, developer5.address,
-  //   developer6.address, developer7.address, developer8.address, developer9.address, developer10.address,
-  //   developer11.address, developer12.address, developer13.address, developer14.address, developer15.address,
-  //   developer16.address, developer17.address, developer18.address, developer19.address, developer20.address,
-  //   developer21.address, developer22.address, developer23.address, developer24.address, developer25.address,
-  //   developer26.address, developer27.address, developer28.address],
-  //   PROXY_REG_ADDRESS,
-  //   treasury.address,
-  //   whitelister.address
-  // ) as Voiders721;
-  // await voiders.deployed()
+  const VoidersFactory = (await ethers.getContractFactory("VoidersGenesis")) as VoidersGenesis__factory;
+  const voiders = await VoidersFactory.deploy(
+      "Voiders Genesis",
+      "VoidGen",
+      BASE_URI,
+      PRESALE_START_TIME,
+      treasury.address,
+      whitelister.address,
+      PROXY_REG_ADDRESS
+  ) as VoidersGenesis;
 
-  // console.log("Voiders deployed to:", voiders.address);
+  await voiders.deployed();
+  console.log("Voiders deployed to:", voiders.address);
+
+  await delay(20000);
+
 
 
   await hre.run("verify:verify", {
-    address: "0xA6392aB958387A4178173980431fea8B26914164",
+    address: voiders.address,
     constructorArguments: [
-      "Voiders",
-      "VDRS",
-      1667147414252,
-      [developer1.address, developer2.address, developer3.address, developer4.address, developer5.address,
-      developer6.address, developer7.address, developer8.address, developer9.address, developer10.address,
-      developer11.address, developer12.address, developer13.address, developer14.address, developer15.address,
-      developer16.address, developer17.address, developer18.address, developer19.address, developer20.address,
-      developer21.address, developer22.address, developer23.address, developer24.address, developer25.address,
-      developer26.address, developer27.address, developer28.address],
-      PROXY_REG_ADDRESS,
+      "Voiders Genesis",
+      "VoidGen",
+      BASE_URI,
+      PRESALE_START_TIME,
       treasury.address,
-      whitelister.address
+      whitelister.address,
+      PROXY_REG_ADDRESS
     ],
 
   });
