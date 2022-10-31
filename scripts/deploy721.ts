@@ -14,11 +14,13 @@ async function main() {
 
   const BASE_URI = "https://ipfs.io/ipfs/QmTrATxkJnRkAFAY9dHkGJ2qtHHnDksaVYsTjumdeijQZw?filename=1.json";
   const PROXY_REG_ADDRESS = ethers.constants.AddressZero;
-  const PRESALE_START_TIME = Date.now();
+  const PRESALE_START_TIME = 1667247185966;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
   const [owner, otherAccount,treasury] = await ethers.getSigners();
-
+  // whitelister 0x73431fAbf5EeaA29AA973bd46a73e1128A95Aebd
+  // whitelister 0xfc758283c2df7add5c01beac19b746f1bb8c3e4a1978fbe2a7d31bab092bd0a4
+  // Voiders deployed to: 0x50A68880864aCEd226567dDC35b9bf6F75f4FfC9
   const signers = await ethers.getSigners();
 
   const whitelister  = ethers.Wallet.createRandom();
