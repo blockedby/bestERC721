@@ -1,39 +1,68 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import "./ERC721Tradable.sol";
 
-import "hardhat/console.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
+import "./common/meta-transactions/ContentMixin.sol";
+import "./common/meta-transactions/NativeMetaTransaction.sol";
+
+contract OwnableDelegateProxy {}
 
 /**
- * @title Creature
- * Creature - a contract for my non-fungible creatures.
+ * Used to delegate ownership of a contract to another address, to save on unneeded transactions to approve contract use for users
  */
-contract Voiders721 is ERC721Tradable {
-    using ECDSA for bytes32;
+contract ProxyRegistry {
+    mapping(address => OwnableDelegateProxy) public proxies;
+}
 
+/**
+ * @title ERC721Tradable
+ * ERC721Tradable - ERC721 contract that whitelists a trading address, and has minting functionality.
+ */
+contract Voiders721 is ERC721, ContextMixin, NativeMetaTransaction, Ownable {
+    using ECDSA for bytes32;
+    using SafeMath for uint256;
+    using Counters for Counters.Counter;
+
+    /**
+     * We rely on the OZ Counter util to keep track of the next available ID.
+     * We track the nextTokenId instead of the currentTokenId to save users on gas costs.
+     * Read more about it here: https://shiny.mirror.xyz/OUampBbIz9ebEicfGnQf5At_ReMHlZy0tB4glb9xQ0E
+     */
+    Counters.Counter private _nextTokenId;
+
+    address public immutable proxyRegistryAddress;
     address public immutable whitelistChecker;
     uint256 public constant maxTotalSupply = 888;
-    uint128 public immutable presealeStartTime;
-    uint128 public immutable presaleEndTime;
-
     uint256 public constant presalePrice = 0.25 ether;
-
-    string private _baseTokenURI;
-    // uint256 public constant publicSalePrice = 0.35 ether;
+    uint128 public immutable presaleStartTime;
+    uint128 public immutable presaleEndTime;
 
     mapping(address => bool) public mintedFromWhitelist;
 
-    receive() external payable {}
+    string private _baseTokenURI;
 
     constructor(
-        uint128 _presealeStartTime,
+        string memory _name,
+        string memory _symbol,
+        uint128 _presaleStartTime,
         address[] memory _developers,
         address _proxyRegistryAddress,
         address _treasury,
         address _whitelistChecker
-    ) ERC721Tradable("Name", "Ticker", _proxyRegistryAddress) {
+    ) ERC721(_name, _symbol) {
+        proxyRegistryAddress = _proxyRegistryAddress;
+        // nextTokenId is initialized to 1, since starting at 0 leads to higher gas cost for the first minter
+        _nextTokenId.increment();
+        _initializeEIP712(_name);
+
         require(
             _whitelistChecker != address(0),
             "Whitelist checker cannot be 0"
@@ -44,19 +73,30 @@ contract Voiders721 is ERC721Tradable {
         for (uint256 i = 0; i < devCount; i++) {
             address dev = _developers[i];
             require(dev != address(0), "Invalid developer address");
-            super.mintTo(dev);
+            _mintTo(dev);
         }
-        console.log("Minted to developers");
-        console.log("treasury", _treasury);
         require(_treasury != address(0), "Invalid treasury address");
         for (uint256 i = 0; i < 20; i++) {
-            super.mintTo(_treasury);
+            _mintTo(_treasury);
         }
-        presealeStartTime = _presealeStartTime;
-        presaleEndTime = _presealeStartTime + 3 hours;
+        presaleStartTime = _presaleStartTime;
+        presaleEndTime = _presaleStartTime + 3 hours;
     }
 
-    // только одну сминтить можно или нет?
+    /**
+     * @dev Mints a token to an address with a tokenURI.
+     * @param _to address of the future owner of the token
+     */
+    function mintTo(address _to) public onlyOwner {
+        _mintTo(_to);
+    }
+
+    function _mintTo(address _to) internal {
+        uint256 currentTokenId = _nextTokenId.current();
+        _nextTokenId.increment();
+        _safeMint(_to, currentTokenId);
+    }
+
     function presaleMint(uint256 _numberOfTokens, bytes memory signature)
         external
         payable
@@ -68,9 +108,9 @@ contract Voiders721 is ERC721Tradable {
             "You are not whitelisted"
         );
         require(
-            block.timestamp >= presealeStartTime &&
+            block.timestamp >= presaleStartTime &&
                 block.timestamp < presaleEndTime,
-            "Presale has not started yet"
+            "Presale is not active"
         );
         require(
             !mintedFromWhitelist[msg.sender],
@@ -86,36 +126,75 @@ contract Voiders721 is ERC721Tradable {
         );
         mintedFromWhitelist[msg.sender] = true;
         for (uint256 i = 0; i < _numberOfTokens; i++) {
-            super.mintTo(msg.sender);
+            _mintTo(msg.sender);
         }
     }
 
     function ownerMintForSell() external onlyOwner {
         uint256 numToMint = maxTotalSupply - totalSupply();
+        require(block.timestamp > presaleEndTime, "Can sell only after presale");
         for (uint256 i = 0; i < numToMint; i++) {
-            super.mintTo(msg.sender);
+            _mintTo(msg.sender);
         }
     }
 
-    function mintTo(address _to) public override {
-        require(totalSupply() < maxTotalSupply, "Exceeds max supply of tokens");
-        require(block.timestamp >= presaleEndTime, "Presale has not ended yet");
-        super.mintTo(_to);
-    }
-
-    function baseTokenURI() public view override returns (string memory) {
-        return _baseURI();
-    }
-
-    function _baseURI() internal override view returns (string memory) {
-        return _baseTokenURI;
-    }
-
-    function changeBaseTokenURI(string memory _newBaseTokenURI) public onlyOwner {
+    function changeBaseTokenURI(string memory _newBaseTokenURI)
+        public
+        onlyOwner
+    {
         _baseTokenURI = _newBaseTokenURI;
     }
 
-    function contractURI() public pure returns (string memory) {
-        return "ipfs://QmQi2F99Dkg4comZzFvcXMrXrVqDeMoBLXp5vgZmo9VWbJ/";
+    /**
+        @dev Returns the total tokens minted so far.
+        1 is always subtracted from the Counter since it tracks the next available tokenId.
+     */
+    function totalSupply() public view returns (uint256) {
+        return _nextTokenId.current() - 1;
+    }
+
+    function baseTokenURI() public view returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    function tokenURI(uint256 _tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
+        return
+            string(
+                abi.encodePacked(
+                    _baseTokenURI,
+                    // Strings.toString(_tokenId),
+                    "1.json"
+                )
+            );
+    }
+
+    /**
+     * Override isApprovedForAll to whitelist user's OpenSea proxy accounts to enable gas-less listings.
+     */
+    function isApprovedForAll(address owner, address operator)
+        public
+        view
+        override
+        returns (bool)
+    {
+        // Whitelist OpenSea proxy contract for easy trading.
+        ProxyRegistry proxyRegistry = ProxyRegistry(proxyRegistryAddress);
+        if (address(proxyRegistry.proxies(owner)) == operator) {
+            return true;
+        }
+
+        return super.isApprovedForAll(owner, operator);
+    }
+
+    /**
+     * This is used instead of msg.sender as transactions won't be sent by the original token owner, but by OpenSea.
+     */
+    function _msgSender() internal view override returns (address sender) {
+        return ContextMixin.msgSender();
     }
 }

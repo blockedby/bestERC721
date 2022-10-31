@@ -18,7 +18,7 @@ const config: HardhatUserConfig = {
 				mnemonic: process.env.MNEMONIC || "",
 				path: "m/44'/60'/0'/0",
 				initialIndex: 0,
-				count: 2,
+				count: 40,
 				passphrase: "",
 			}
 		},

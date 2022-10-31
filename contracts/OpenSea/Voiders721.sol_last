@@ -1,0 +1,121 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "./ERC721Tradable.sol";
+
+import "hardhat/console.sol";
+
+/**
+ * @title Creature
+ * Creature - a contract for my non-fungible creatures.
+ */
+contract Voiders721 is ERC721Tradable {
+    using ECDSA for bytes32;
+
+    address public immutable whitelistChecker;
+    uint256 public constant maxTotalSupply = 888;
+    uint128 public immutable presealeStartTime;
+    uint128 public immutable presaleEndTime;
+
+    uint256 public constant presalePrice = 0.25 ether;
+    // uint256 public constant publicSalePrice = 0.35 ether;
+
+    string private _baseTokenURI;
+
+    mapping(address => bool) public mintedFromWhitelist;
+
+    receive() external payable {}
+
+    constructor(
+        uint128 _presealeStartTime,
+        address[] memory _developers,
+        address _proxyRegistryAddress,
+        address _treasury,
+        address _whitelistChecker
+    ) ERC721Tradable("Name", "Ticker", _proxyRegistryAddress) {
+        require(
+            _whitelistChecker != address(0),
+            "Whitelist checker cannot be 0"
+        );
+        whitelistChecker = _whitelistChecker;
+        uint256 devCount = _developers.length;
+        require(devCount == 28, "Incorrect number of developers");
+        for (uint256 i = 0; i < devCount; i++) {
+            address dev = _developers[i];
+            require(dev != address(0), "Invalid developer address");
+            super.mintTo(dev);
+        }
+        console.log("Minted to developers");
+        console.log("treasury", _treasury);
+        require(_treasury != address(0), "Invalid treasury address");
+        for (uint256 i = 0; i < 20; i++) {
+            super.mintTo(_treasury);
+        }
+        presealeStartTime = _presealeStartTime;
+        presaleEndTime = _presealeStartTime + 3 hours;
+    }
+
+    // только одну сминтить можно или нет?
+    function presaleMint(uint256 _numberOfTokens, bytes memory signature)
+        external
+        payable
+    {
+        require(
+            keccak256(abi.encodePacked(msg.sender))
+                .toEthSignedMessageHash()
+                .recover(signature) == whitelistChecker,
+            "You are not whitelisted"
+        );
+        require(
+            block.timestamp >= presealeStartTime &&
+                block.timestamp < presaleEndTime,
+            "Presale has not started yet"
+        );
+        require(
+            !mintedFromWhitelist[msg.sender],
+            "You are already minted from whitelist"
+        );
+        require(
+            totalSupply() + _numberOfTokens <= maxTotalSupply,
+            "Exceeds max supply of tokens"
+        );
+        require(
+            msg.value == presalePrice * _numberOfTokens,
+            "Wrong amount of ETH"
+        );
+        mintedFromWhitelist[msg.sender] = true;
+        for (uint256 i = 0; i < _numberOfTokens; i++) {
+            super.mintTo(msg.sender);
+        }
+    }
+
+    function ownerMintForSell() external onlyOwner {
+        uint256 numToMint = maxTotalSupply - totalSupply();
+        for (uint256 i = 0; i < numToMint; i++) {
+            super.mintTo(msg.sender);
+        }
+    }
+
+    function mintTo(address _to) public override {
+        require(totalSupply() < maxTotalSupply, "Exceeds max supply of tokens");
+        require(block.timestamp >= presaleEndTime, "Presale has not ended yet");
+        super.mintTo(_to);
+    }
+
+    function baseTokenURI() public pure override returns (string memory) {
+        return _baseURI();
+    }
+
+    function _baseURI() internal override view returns (string memory) {
+        return _baseTokenURI;
+    }
+
+    function changeBaseTokenURI(string memory _newBaseTokenURI) public onlyOwner {
+        _setBaseTokenURI(_newBaseTokenURI);
+    }
+
+    function contractURI() public pure returns (string memory) {
+        return "ipfs://QmQi2F99Dkg4comZzFvcXMrXrVqDeMoBLXp5vgZmo9VWbJ/";
+    }
+}
