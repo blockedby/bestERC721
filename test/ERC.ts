@@ -20,6 +20,7 @@ async function signAddress(signer: SignerWithAddress, toSign: string) {
 async function deployERC721Fixture() {
     // const PROXY_REG_ADDRESS = "1e0049783f008a0085193e00003d00cd54003c71";
     const BASE_URI = "https://voiders.io/api/voiders/";
+    const CONTRACT_URI = "https://voiders.io/api/contract/";
     const PROXY_REG_ADDRESS = ethers.constants.AddressZero;
     const PRESALE_START_TIME = (await time.latest()) + (time.duration.days(1));
 
@@ -33,6 +34,7 @@ async function deployERC721Fixture() {
         "Voiders Genesis",
         "VoidGen",
         BASE_URI,
+        CONTRACT_URI,
         PRESALE_START_TIME,
         treasury.address,
         whitelister.address,
@@ -150,6 +152,7 @@ describe("ERC", function () {
             const voiders = await VoidersFactory.deploy(
                 "Voiders Genesis",
                 "VoidGen",
+                BASE_URI,
                 BASE_URI,
                 PRESALE_START_TIME,
                 treasury.address,

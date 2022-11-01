@@ -44,6 +44,7 @@ contract VoidersGenesis is
     uint128 public presaleStartTime; // SET IMMUATABLE AT MAINNET DEPLOYMENT
     uint128 public presaleEndTime; // SET IMMUATABLE AT MAINNET DEPLOYMENT
     string private _baseTokenURI;
+    string private _contractURI;
 
     mapping(address => bool) public mintedFromWhitelist;
 
@@ -51,12 +52,14 @@ contract VoidersGenesis is
         string memory _name,
         string memory _symbol,
         string memory _baseURI,
+        string memory _newContractURI,
         uint128 _presaleStartTime,
         address _treasury,
         address _whitelistChecker,
         address _proxyRegistryAddress
     ) ERC721(_name, _symbol) {
         _baseTokenURI = _baseURI;
+        _contractURI = _newContractURI;
         proxyRegistryAddress = _proxyRegistryAddress;
         _nextTokenId.increment();
         _initializeEIP712(_name);
@@ -153,11 +156,26 @@ contract VoidersGenesis is
     }
 
     /**
+     * @dev Changes baseTokenURI.
+     * @param _newContractURI new URI for all tokens
+     */
+    function changeContractURI(string memory _newContractURI) public onlyOwner {
+        _contractURI = _newContractURI;
+    }
+
+    /**
      * @dev Returns the total tokens minted so far.
      * 1 is always subtracted from the Counter since it tracks the next available tokenId.
      */
     function totalSupply() public view returns (uint256) {
         return _nextTokenId.current() - 1;
+    }
+
+    /**
+     * @dev Returns contractURI.
+     */
+    function contractURI() public view returns (string memory) {
+        return _contractURI;
     }
 
     /**

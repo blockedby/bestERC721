@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "@primitivefi/hardhat-dodoc": "^0.2.3",
     "dotenv": "^16.0.3",
     "hardhat": "^2.11.1"
   },
