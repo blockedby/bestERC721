@@ -1,5 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
+import '@primitivefi/hardhat-dodoc';
 
 import * as dot from "dotenv";
 dot.config();
