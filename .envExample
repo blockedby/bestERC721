@@ -1,0 +1,19 @@
+# MAINNET URLS
+BSC_URL = https://bscrpc.com
+ETH_URL = https://cloudflare-eth.com
+
+# TESTNET URLS
+# BSC_TESTNET_URL = https://snowy-neat-slug.bsc-testnet.discover.quiknode.pro/bda084e399de80a771e13037c2e7408bd5ad40c1
+# BSC_TESTNET_URL=https://data-seed-prebsc-1-s3.binance.org:8545
+# BSC_TESTNET_URL=https://bsctestapi.terminet.io/rpc
+BSC_TESTNET_URL=https://data-seed-prebsc-1-s1.binance.org:8545
+GOERLI_URL=https://rpc.ankr.com/eth_goerli/
+
+# ETHERSCAN KEYS
+ETHERSCAN__MAINNET_API_KEY=ZMIBQNQKAPIKEYN787W7YA2E6QPTAPIKEY
+ETHERSCAN__BSC_API_KEY=YAGVQM8APIKEYKU8S5RJ9APIKEYCSRR3MX
+
+# DATA
+MNEMONIC=your twelve word mnemonic phrase here your twelve word mnemonic phrase here
+PRIVATE_KEY=yourPrivateKeyIfYouPreferThisDoNotForgetToChangeHardhatConfigIfYouUseThis
+

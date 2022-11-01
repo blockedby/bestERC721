@@ -9,8 +9,15 @@ const config: HardhatUserConfig = {
 	networks: {
 		mainnet: {
 			url: process.env.MAINNET_URL || "",
-			accounts:
-				process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+			accounts: {
+				mnemonic: process.env.MNEMONIC || "",
+				path: "m/44'/60'/0'/0",
+				initialIndex: 0,
+				count: 50,
+				passphrase: "",
+			}
+			// accounts:
+			// 	process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
 		},
 		goerli: {
 			url: process.env.GOERLI_URL || "",
