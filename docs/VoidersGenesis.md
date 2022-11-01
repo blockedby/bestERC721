@@ -2,7 +2,7 @@
 
 
 
-> Voiders721 Voiders721 - ERC721Tradable-like contract.
+> VoidersGenesis is ERC721Tradable-compatible contract.
 
 
 

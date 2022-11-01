@@ -9,8 +9,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "./common/meta-transactions/ContentMixin.sol";
-import "./common/meta-transactions/NativeMetaTransaction.sol";
+import "./OpenSea/common/meta-transactions/ContentMixin.sol";
+import "./OpenSea/common/meta-transactions/NativeMetaTransaction.sol";
 
 contract OwnableDelegateProxy {}
 
@@ -22,8 +22,8 @@ contract ProxyRegistry {
 }
 
 /**
- * @title Voiders721
- * Voiders721 - ERC721Tradable-like contract.
+ * @title VoidersGenesis
+ * is ERC721Tradable-compatible contract.
  */
 contract VoidersGenesis is
     ERC721,
