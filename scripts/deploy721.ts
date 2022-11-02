@@ -21,7 +21,6 @@ async function main() {
   const [owner, otherAccount, treasury] = await ethers.getSigners();
   // whitelister 0x73431fAbf5EeaA29AA973bd46a73e1128A95Aebd
   // whitelister 0xfc758283c2df7add5c01beac19b746f1bb8c3e4a1978fbe2a7d31bab092bd0a4
-  const signers = await ethers.getSigners();
 
   const whitelister = "0x73431fAbf5EeaA29AA973bd46a73e1128A95Aebd";
 

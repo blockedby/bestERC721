@@ -12,9 +12,14 @@ npx hardhat node
 npx hardhat run scripts/deploy.ts
 ```
 
-## Deployed address
+## Deployed address with test funcs
 
 https://goerli.etherscan.io/address/0x9739dd1a93364292c0d230772c3b06ce26229360
+
+
+## Prod-like contract
+
+https://goerli.etherscan.io/address/0x602F1ce4c89bEa7DCbF9cC58e2D7f673d63e5bdb#code
 
 ## Opensea
 

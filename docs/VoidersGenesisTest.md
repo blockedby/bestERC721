@@ -1,4 +1,4 @@
-# VoidersGenesis
+# VoidersGenesisTest
 
 
 
@@ -568,6 +568,60 @@ function symbol() external view returns (string)
 | Name | Type | Description |
 |---|---|---|
 | _0 | string | undefined |
+
+### testChangePresalePrice
+
+```solidity
+function testChangePresalePrice(uint256 _newPrice) external nonpayable
+```
+
+
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _newPrice | uint256 | undefined |
+
+### testEndPresale
+
+```solidity
+function testEndPresale() external nonpayable
+```
+
+
+
+
+
+
+### testMintTo
+
+```solidity
+function testMintTo(address _to) external nonpayable
+```
+
+TEST FUNCS START: REMOVE BEFORE DEPLOYMENT TO MAINNET
+
+
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _to | address | undefined |
+
+### testStartPresale
+
+```solidity
+function testStartPresale() external nonpayable
+```
+
+
+
+
+
 
 ### tokenURI
 
