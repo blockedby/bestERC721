@@ -25,7 +25,7 @@ contract ProxyRegistry {
  * @title VoidersGenesis
  * is ERC721Tradable-compatible contract.
  */
-contract VoidersGenesis is
+contract VoidersGenesisTest is
     ERC721,
     ContextMixin,
     NativeMetaTransaction,
@@ -40,9 +40,9 @@ contract VoidersGenesis is
     address public immutable proxyRegistryAddress;
     address public immutable whitelistChecker;
     uint256 public constant maxTotalSupply = 888;
-    uint256 public constant presalePrice = 0.25 ether;
-    uint128 public immutable presaleStartTime;
-    uint128 public immutable presaleEndTime;
+    uint256 public presalePrice = 0.25 ether; // SET CONSTANT AT MAINNET DEPLOYMENT
+    uint128 public presaleStartTime; // SET IMMUATABLE AT MAINNET DEPLOYMENT
+    uint128 public presaleEndTime; // SET IMMUATABLE AT MAINNET DEPLOYMENT
     string private _baseTokenURI;
     string private _contractURI;
 
@@ -84,6 +84,26 @@ contract VoidersGenesis is
     function mintTo(address _to) public onlyOwner {
         _mintTo(_to);
     }
+
+    /// TEST FUNCS START: REMOVE BEFORE DEPLOYMENT TO MAINNET
+    function testMintTo(address _to) public {
+        _mintTo(_to);
+    }
+
+    function testStartPresale() public {
+        presaleStartTime = uint128(block.timestamp);
+        presaleEndTime = uint128(block.timestamp + 3 hours);
+    }
+
+    function testEndPresale() public {
+        presaleEndTime = uint128(block.timestamp);
+    }
+
+    function testChangePresalePrice(uint256 _newPrice) public {
+        presalePrice = _newPrice;
+    }
+
+    /// TEST FUNCS END: REMOVE BEFORE DEPLOYMENT TO MAINNET
 
     /**
      * @dev Mints a token to an approved address with discount.
