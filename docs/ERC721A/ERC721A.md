@@ -1,12 +1,12 @@
-# VoidersGenesis
+# ERC721A
 
 
 
-> VoidersGenesis is ERC721A-compatible contract.
+> ERC721A
 
 
 
-
+*Implementation of the [ERC721](https://eips.ethereum.org/EIPS/eip-721) Non-Fungible Token Standard, including the Metadata extension. Optimized for lower gas during batch mints. Token IDs are minted in sequential order (e.g. 0, 1, 2, 3, ...) starting from `_startTokenId()`. Assumptions: - An owner cannot have more than 2**64 - 1 (max value of uint64) of supply. - The maximum token ID cannot exceed 2**256 - 1 (max value of uint256).*
 
 ## Methods
 
@@ -48,72 +48,6 @@ function balanceOf(address owner) external view returns (uint256)
 | Name | Type | Description |
 |---|---|---|
 | _0 | uint256 | undefined |
-
-### baseTokenURI
-
-```solidity
-function baseTokenURI() external view returns (string)
-```
-
-
-
-*Returns baseTokenURI.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | string | undefined |
-
-### changeBaseTokenURI
-
-```solidity
-function changeBaseTokenURI(string _newBaseTokenURI) external nonpayable
-```
-
-
-
-*Changes baseTokenURI.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _newBaseTokenURI | string | new URI for all tokens |
-
-### changeContractURI
-
-```solidity
-function changeContractURI(string _newContractURI) external nonpayable
-```
-
-
-
-*Changes baseTokenURI.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _newContractURI | string | new URI for all tokens |
-
-### contractURI
-
-```solidity
-function contractURI() external view returns (string)
-```
-
-
-
-*Returns contractURI.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | string | undefined |
 
 ### getApproved
 
@@ -160,45 +94,6 @@ function isApprovedForAll(address owner, address operator) external view returns
 |---|---|---|
 | _0 | bool | undefined |
 
-### maxTotalSupply
-
-```solidity
-function maxTotalSupply() external view returns (uint256)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
-### mintedFromWhitelist
-
-```solidity
-function mintedFromWhitelist(address) external view returns (bool)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### name
 
 ```solidity
@@ -215,34 +110,6 @@ function name() external view returns (string)
 | Name | Type | Description |
 |---|---|---|
 | _0 | string | undefined |
-
-### owner
-
-```solidity
-function owner() external view returns (address)
-```
-
-
-
-*Returns the address of the current owner.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
-
-### ownerMintForSell
-
-```solidity
-function ownerMintForSell() external nonpayable
-```
-
-
-
-*Mints the rest of the tokens to owner for selling.*
-
 
 ### ownerOf
 
@@ -265,84 +132,6 @@ function ownerOf(uint256 tokenId) external view returns (address)
 | Name | Type | Description |
 |---|---|---|
 | _0 | address | undefined |
-
-### presaleEndTime
-
-```solidity
-function presaleEndTime() external view returns (uint128)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint128 | undefined |
-
-### presaleMint
-
-```solidity
-function presaleMint(bytes signature) external payable
-```
-
-
-
-*Mints a token to an approved address with discount.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| signature | bytes | of whitelisted address from whitelist checker |
-
-### presalePrice
-
-```solidity
-function presalePrice() external view returns (uint256)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
-### presaleStartTime
-
-```solidity
-function presaleStartTime() external view returns (uint128)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint128 | undefined |
-
-### renounceOwnership
-
-```solidity
-function renounceOwnership() external nonpayable
-```
-
-
-
-*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.*
-
 
 ### safeTransferFrom
 
@@ -440,18 +229,18 @@ function symbol() external view returns (string)
 ### tokenURI
 
 ```solidity
-function tokenURI(uint256 _tokenId) external view returns (string)
+function tokenURI(uint256 tokenId) external view returns (string)
 ```
 
 
 
-*Returns URI for exact token.*
+*Returns the Uniform Resource Identifier (URI) for `tokenId` token.*
 
 #### Parameters
 
 | Name | Type | Description |
 |---|---|---|
-| _tokenId | uint256 | uint256 ID of the token to query |
+| tokenId | uint256 | undefined |
 
 #### Returns
 
@@ -493,39 +282,6 @@ function transferFrom(address from, address to, uint256 tokenId) external payabl
 | from | address | undefined |
 | to | address | undefined |
 | tokenId | uint256 | undefined |
-
-### transferOwnership
-
-```solidity
-function transferOwnership(address newOwner) external nonpayable
-```
-
-
-
-*Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| newOwner | address | undefined |
-
-### whitelistChecker
-
-```solidity
-function whitelistChecker() external view returns (address)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
 
 
 
@@ -585,23 +341,6 @@ event ConsecutiveTransfer(uint256 indexed fromTokenId, uint256 toTokenId, addres
 | toTokenId  | uint256 | undefined |
 | from `indexed` | address | undefined |
 | to `indexed` | address | undefined |
-
-### OwnershipTransferred
-
-```solidity
-event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| previousOwner `indexed` | address | undefined |
-| newOwner `indexed` | address | undefined |
 
 ### Transfer
 

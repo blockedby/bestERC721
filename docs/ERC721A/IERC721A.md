@@ -1,12 +1,12 @@
-# VoidersGenesis
-
-
-
-> VoidersGenesis is ERC721A-compatible contract.
+# IERC721A
 
 
 
 
+
+
+
+*Interface of ERC721A.*
 
 ## Methods
 
@@ -30,7 +30,7 @@ function approve(address to, uint256 tokenId) external payable
 ### balanceOf
 
 ```solidity
-function balanceOf(address owner) external view returns (uint256)
+function balanceOf(address owner) external view returns (uint256 balance)
 ```
 
 
@@ -47,78 +47,12 @@ function balanceOf(address owner) external view returns (uint256)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | uint256 | undefined |
-
-### baseTokenURI
-
-```solidity
-function baseTokenURI() external view returns (string)
-```
-
-
-
-*Returns baseTokenURI.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | string | undefined |
-
-### changeBaseTokenURI
-
-```solidity
-function changeBaseTokenURI(string _newBaseTokenURI) external nonpayable
-```
-
-
-
-*Changes baseTokenURI.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _newBaseTokenURI | string | new URI for all tokens |
-
-### changeContractURI
-
-```solidity
-function changeContractURI(string _newContractURI) external nonpayable
-```
-
-
-
-*Changes baseTokenURI.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _newContractURI | string | new URI for all tokens |
-
-### contractURI
-
-```solidity
-function contractURI() external view returns (string)
-```
-
-
-
-*Returns contractURI.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | string | undefined |
+| balance | uint256 | undefined |
 
 ### getApproved
 
 ```solidity
-function getApproved(uint256 tokenId) external view returns (address)
+function getApproved(uint256 tokenId) external view returns (address operator)
 ```
 
 
@@ -135,7 +69,7 @@ function getApproved(uint256 tokenId) external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined |
+| operator | address | undefined |
 
 ### isApprovedForAll
 
@@ -160,45 +94,6 @@ function isApprovedForAll(address owner, address operator) external view returns
 |---|---|---|
 | _0 | bool | undefined |
 
-### maxTotalSupply
-
-```solidity
-function maxTotalSupply() external view returns (uint256)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
-### mintedFromWhitelist
-
-```solidity
-function mintedFromWhitelist(address) external view returns (bool)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | bool | undefined |
-
 ### name
 
 ```solidity
@@ -216,38 +111,10 @@ function name() external view returns (string)
 |---|---|---|
 | _0 | string | undefined |
 
-### owner
-
-```solidity
-function owner() external view returns (address)
-```
-
-
-
-*Returns the address of the current owner.*
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
-
-### ownerMintForSell
-
-```solidity
-function ownerMintForSell() external nonpayable
-```
-
-
-
-*Mints the rest of the tokens to owner for selling.*
-
-
 ### ownerOf
 
 ```solidity
-function ownerOf(uint256 tokenId) external view returns (address)
+function ownerOf(uint256 tokenId) external view returns (address owner)
 ```
 
 
@@ -264,85 +131,7 @@ function ownerOf(uint256 tokenId) external view returns (address)
 
 | Name | Type | Description |
 |---|---|---|
-| _0 | address | undefined |
-
-### presaleEndTime
-
-```solidity
-function presaleEndTime() external view returns (uint128)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint128 | undefined |
-
-### presaleMint
-
-```solidity
-function presaleMint(bytes signature) external payable
-```
-
-
-
-*Mints a token to an approved address with discount.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| signature | bytes | of whitelisted address from whitelist checker |
-
-### presalePrice
-
-```solidity
-function presalePrice() external view returns (uint256)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint256 | undefined |
-
-### presaleStartTime
-
-```solidity
-function presaleStartTime() external view returns (uint128)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | uint128 | undefined |
-
-### renounceOwnership
-
-```solidity
-function renounceOwnership() external nonpayable
-```
-
-
-
-*Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner.*
-
+| owner | address | undefined |
 
 ### safeTransferFrom
 
@@ -365,12 +154,12 @@ function safeTransferFrom(address from, address to, uint256 tokenId) external pa
 ### safeTransferFrom
 
 ```solidity
-function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data) external payable
+function safeTransferFrom(address from, address to, uint256 tokenId, bytes data) external payable
 ```
 
 
 
-*Safely transfers `tokenId` token from `from` to `to`. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.*
+*Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must exist and be owned by `from`. - If the caller is not `from`, it must be have been allowed to move this token by either {approve} or {setApprovalForAll}. - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon a safe transfer. Emits a {Transfer} event.*
 
 #### Parameters
 
@@ -379,12 +168,12 @@ function safeTransferFrom(address from, address to, uint256 tokenId, bytes _data
 | from | address | undefined |
 | to | address | undefined |
 | tokenId | uint256 | undefined |
-| _data | bytes | undefined |
+| data | bytes | undefined |
 
 ### setApprovalForAll
 
 ```solidity
-function setApprovalForAll(address operator, bool approved) external nonpayable
+function setApprovalForAll(address operator, bool _approved) external nonpayable
 ```
 
 
@@ -396,7 +185,7 @@ function setApprovalForAll(address operator, bool approved) external nonpayable
 | Name | Type | Description |
 |---|---|---|
 | operator | address | undefined |
-| approved | bool | undefined |
+| _approved | bool | undefined |
 
 ### supportsInterface
 
@@ -440,18 +229,18 @@ function symbol() external view returns (string)
 ### tokenURI
 
 ```solidity
-function tokenURI(uint256 _tokenId) external view returns (string)
+function tokenURI(uint256 tokenId) external view returns (string)
 ```
 
 
 
-*Returns URI for exact token.*
+*Returns the Uniform Resource Identifier (URI) for `tokenId` token.*
 
 #### Parameters
 
 | Name | Type | Description |
 |---|---|---|
-| _tokenId | uint256 | uint256 ID of the token to query |
+| tokenId | uint256 | undefined |
 
 #### Returns
 
@@ -484,7 +273,7 @@ function transferFrom(address from, address to, uint256 tokenId) external payabl
 
 
 
-*Transfers `tokenId` from `from` to `to`. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event.*
+*Transfers `tokenId` from `from` to `to`. WARNING: Usage of this method is discouraged, use {safeTransferFrom} whenever possible. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}. Emits a {Transfer} event.*
 
 #### Parameters
 
@@ -493,39 +282,6 @@ function transferFrom(address from, address to, uint256 tokenId) external payabl
 | from | address | undefined |
 | to | address | undefined |
 | tokenId | uint256 | undefined |
-
-### transferOwnership
-
-```solidity
-function transferOwnership(address newOwner) external nonpayable
-```
-
-
-
-*Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.*
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| newOwner | address | undefined |
-
-### whitelistChecker
-
-```solidity
-function whitelistChecker() external view returns (address)
-```
-
-
-
-
-
-
-#### Returns
-
-| Name | Type | Description |
-|---|---|---|
-| _0 | address | undefined |
 
 
 
@@ -539,7 +295,7 @@ event Approval(address indexed owner, address indexed approved, uint256 indexed 
 
 
 
-
+*Emitted when `owner` enables `approved` to manage the `tokenId` token.*
 
 #### Parameters
 
@@ -557,7 +313,7 @@ event ApprovalForAll(address indexed owner, address indexed operator, bool appro
 
 
 
-
+*Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.*
 
 #### Parameters
 
@@ -575,7 +331,7 @@ event ConsecutiveTransfer(uint256 indexed fromTokenId, uint256 toTokenId, addres
 
 
 
-
+*Emitted when tokens in `fromTokenId` to `toTokenId` (inclusive) is transferred from `from` to `to`, as defined in the [ERC2309](https://eips.ethereum.org/EIPS/eip-2309) standard. See {_mintERC2309} for more details.*
 
 #### Parameters
 
@@ -586,23 +342,6 @@ event ConsecutiveTransfer(uint256 indexed fromTokenId, uint256 toTokenId, addres
 | from `indexed` | address | undefined |
 | to `indexed` | address | undefined |
 
-### OwnershipTransferred
-
-```solidity
-event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)
-```
-
-
-
-
-
-#### Parameters
-
-| Name | Type | Description |
-|---|---|---|
-| previousOwner `indexed` | address | undefined |
-| newOwner `indexed` | address | undefined |
-
 ### Transfer
 
 ```solidity
@@ -611,7 +350,7 @@ event Transfer(address indexed from, address indexed to, uint256 indexed tokenId
 
 
 
-
+*Emitted when `tokenId` token is transferred from `from` to `to`.*
 
 #### Parameters
 
