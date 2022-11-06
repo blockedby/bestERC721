@@ -94,7 +94,7 @@ contract VoidersGenesis is ERC721A, Ownable {
     }
 
     /**
-     * @dev Changes baseTokenURI.
+     * @dev Changes baseContractURI.
      * @param _newContractURI new URI for all tokens
      */
     function changeContractURI(string memory _newContractURI) public onlyOwner {
