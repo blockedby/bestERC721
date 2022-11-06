@@ -17,6 +17,10 @@ npx hardhat run scripts/deploy.ts
 https://goerli.etherscan.io/address/0x9739dd1a93364292c0d230772c3b06ce26229360
 
 
+## After audit and deploy
+
+https://goerli.etherscan.io/address/0x90003241e2eF7d832292dC0098D2461c261f5B92#code
+
 ## Prod-like contract
 
 https://goerli.etherscan.io/address/0x602F1ce4c89bEa7DCbF9cC58e2D7f673d63e5bdb#code
