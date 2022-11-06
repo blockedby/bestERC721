@@ -14,7 +14,6 @@ async function main() {
 
   const BASE_URI = "ipfs://QmRSDdtDTTBLiLcKTYXrmCVdCANYi6JUraFbAKWmfNuxJF";
   const CONTRACT_URI = "ipfs://QmRSDdtDTTBLiLcKTYXrmCVdCANYi6JUraFbAKWmfNuxJF";
-  const PROXY_REG_ADDRESS = ethers.constants.AddressZero;
   const PRESALE_START_TIME = 1667247185966;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
@@ -32,8 +31,7 @@ async function main() {
     CONTRACT_URI,
     PRESALE_START_TIME,
     treasury.address,
-    whitelister,
-    PROXY_REG_ADDRESS
+    whitelister
   ) as VoidersGenesis;
 
   await voiders.deployed();
@@ -50,8 +48,7 @@ async function main() {
       CONTRACT_URI,
       PRESALE_START_TIME,
       treasury.address,
-      whitelister,
-      PROXY_REG_ADDRESS
+      whitelister
     ],
 
   });
