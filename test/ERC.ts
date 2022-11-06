@@ -37,8 +37,7 @@ async function deployERC721Fixture() {
         CONTRACT_URI,
         PRESALE_START_TIME,
         treasury.address,
-        whitelister.address,
-        PROXY_REG_ADDRESS
+        whitelister.address
     ) as VoidersGenesis;
     return {
         BASE_URI,
@@ -64,7 +63,6 @@ describe("ERC", function () {
         expect(await voiders.symbol()).to.eq("VoidGen");
         expect(await voiders.presaleStartTime()).to.eq(PRESALE_START_TIME);
         expect(await voiders.presaleEndTime()).to.eq(BigNumber.from(PRESALE_START_TIME).add(ethers.BigNumber.from(3600 * 3)));
-        expect(await voiders.proxyRegistryAddress()).to.eq(PROXY_REG_ADDRESS);
     });
     it("Should check baseTokenURI", async function () {
         const { voiders, owner, otherAccount, BASE_URI } = await loadFixture(deployERC721Fixture);
@@ -78,14 +76,19 @@ describe("ERC", function () {
         expect(await voiders.baseTokenURI()).to.eq("https://voiders.io/");
     });
     it("Should check tokenURI", async function () {
-        const { voiders, owner, BASE_URI } = await loadFixture(deployERC721Fixture);
+        const { voiders, owner, BASE_URI, PRESALE_START_TIME } = await loadFixture(deployERC721Fixture);
 
         expect(await voiders.baseTokenURI()).to.eq(BASE_URI);
 
         await voiders.connect(owner).changeBaseTokenURI("https://voiders.io/");
 
-        expect(await voiders.tokenURI(0)).to.eq("https://voiders.io/");
-        expect(await voiders.tokenURI(101)).to.eq("https://voiders.io/");
+        await time.increaseTo(PRESALE_START_TIME + 100000);
+        await voiders.ownerMintForSell();
+
+        expect(await voiders.tokenURI(0)).to.eq("https://voiders.io/0.json");
+        expect(await voiders.tokenURI(101)).to.eq("https://voiders.io/101.json");
+
+
     });
 
     it("Should check NFT at treasury address", async function () {
@@ -136,7 +139,7 @@ describe("ERC", function () {
             expect(await voiders.mintedFromWhitelist(otherAccount.address)).to.eq(true);
             await expect(voiders.connect(otherAccount).presaleMint(sign, { value: PRESALE_PRICE })).to.be.revertedWith("You are already minted from whitelist");
         });
-        it("Should presale to max supply", async function () {
+        it.skip("Should presale to max supply", async function () {
             const BASE_URI = "https://voiders.io/api/voiders/";
             const PROXY_REG_ADDRESS = ethers.constants.AddressZero;
             const PRESALE_START_TIME = (await time.latest()) + (time.duration.days(1));
@@ -156,8 +159,7 @@ describe("ERC", function () {
                 BASE_URI,
                 PRESALE_START_TIME,
                 treasury.address,
-                whitelister.address,
-                PROXY_REG_ADDRESS
+                whitelister.address
             ) as VoidersGenesis;
 
             expect(await voiders.totalSupply()).to.eq(25);
@@ -166,7 +168,7 @@ describe("ERC", function () {
             await time.increaseTo(PRESALE_START_TIME);
             const mintAmount = 863 ;  // 888 - 25;
 
-            console.log("it's realy long... please, stand by.")
+            console.log("it's really long... please, stand by.")
             for (let i = 4; i < mintAmount + 4; i++) {
                 const { hash, sign } = await signAddress(whitelister, signers[i].address);
                 await expect(voiders.connect(signers[i]).presaleMint(sign, { value: PRESALE_PRICE })).to.changeTokenBalance(voiders, signers[i], 1);
@@ -182,23 +184,23 @@ describe("ERC", function () {
             // await expect(voiders.connect(otherAccount).presaleMint(sign, { value: PRESALE_PRICE.mul(mintAmount) })).to.changeTokenBalance(voiders, otherAccount, mintAmount);
         });
 
-        it("Should not mint more than max suuply", async function () {
-            const { voiders, owner, whitelister, otherAccount, treasury } = await loadFixture(deployERC721Fixture);
-            const { hash, sign } = await signAddress(whitelister, otherAccount.address);
-            await time.increaseTo((await voiders.presaleEndTime()).add(1));
-            const mintAmount = 888 - 25;
-            console.log("it's realy long... please, stand by.")
-            for (let i = 0; i < mintAmount; i++) {
-                await (voiders.connect(owner).mintTo(otherAccount.address));
-            }
+        // it.skip("Should not mint more than max suuply", async function () {
+        //     const { voiders, owner, whitelister, otherAccount, treasury } = await loadFixture(deployERC721Fixture);
+        //     const { hash, sign } = await signAddress(whitelister, otherAccount.address);
+        //     await time.increaseTo((await voiders.presaleEndTime()).add(1));
+        //     const mintAmount = 888 - 25;
+        //     console.log("it's realy long... please, stand by.")
+        //     for (let i = 0; i < mintAmount; i++) {
+        //         await (voiders.connect(owner).mintTo(otherAccount.address));
+        //     }
 
-            expect (await voiders.totalSupply()).to.eq(888);
-            expect(await voiders.balanceOf(owner.address)).to.eq(0);
-            expect(await voiders.balanceOf(treasury.address)).to.eq(25);
-            expect(await voiders.balanceOf(otherAccount.address)).to.eq(888 - 25);
+        //     expect (await voiders.totalSupply()).to.eq(888);
+        //     expect(await voiders.balanceOf(owner.address)).to.eq(0);
+        //     expect(await voiders.balanceOf(treasury.address)).to.eq(25);
+        //     expect(await voiders.balanceOf(otherAccount.address)).to.eq(888 - 25);
 
-            await expect(voiders.connect(owner).mintTo(otherAccount.address)).to.be.revertedWith("Exceeds max supply of tokens");
-        });
+        //     await expect(voiders.connect(owner).mintTo(otherAccount.address)).to.be.revertedWith("Exceeds max supply of tokens");
+        // });
 
 
 
