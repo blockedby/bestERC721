@@ -12,9 +12,9 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address);
 
-  const BASE_URI = "ipfs://QmRSDdtDTTBLiLcKTYXrmCVdCANYi6JUraFbAKWmfNuxJF";
-  const CONTRACT_URI = "ipfs://QmRSDdtDTTBLiLcKTYXrmCVdCANYi6JUraFbAKWmfNuxJF";
-  const PRESALE_START_TIME = 1667247185966;
+  const BASE_URI = "ipfs://QmUZqBZ43A5uhymPfobPXXkfRNJmJx4sDk9JVwLwkpMmRj/";
+  const CONTRACT_URI = "ipfs://QmRSDdtDTTBLiLcKTYXrmCVdCANYi6JUraFbAKWmfNuxJF/";
+  const PRESALE_START_TIME = 1668208271;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
   const [owner, otherAccount, treasury] = await ethers.getSigners();

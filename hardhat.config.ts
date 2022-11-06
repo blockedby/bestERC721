@@ -52,6 +52,7 @@ const config: HardhatUserConfig = {
 			},
 
 			forking: {
+				// url: process.env.BSC_TESTNET_URL || "",
 				url: process.env.GOERLI_URL || "",
 				// url: process.env.ETH_URL || "",
 				// blockNumber: 14679873,
@@ -95,7 +96,7 @@ const config: HardhatUserConfig = {
 				settings: {
 					optimizer: {
 						enabled: true,
-						runs: 200,
+						runs: 87678,
 					}
 				}
 
