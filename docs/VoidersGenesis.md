@@ -90,7 +90,7 @@ function changeContractURI(string _newContractURI) external nonpayable
 
 
 
-*Changes baseTokenURI.*
+*Changes baseContractURI.*
 
 #### Parameters
 

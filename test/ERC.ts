@@ -2,7 +2,7 @@ import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { VoidersGenesis, VoidersGenesis__factory } from "../typechain-types";
+import { VoidersGenesis, VoidersGenesis__factory, VoidersTreasury,VoidersTreasury__factory } from "../typechain-types";
 import { BigNumber } from "ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
@@ -26,10 +26,17 @@ async function deployERC721Fixture() {
 
 
 
-    const [owner, otherAccount, whitelister,treasury] = await ethers.getSigners();
+    const [owner, otherAccount, whitelister, alice, bob, carol] = await ethers.getSigners();
 
 
     const VoidersFactory = (await ethers.getContractFactory("VoidersGenesis")) as VoidersGenesis__factory;
+    const VoidersTreasuryFactory = (await ethers.getContractFactory("VoidersTreasury")) as VoidersTreasury__factory;
+
+    const treasury = await VoidersTreasuryFactory.deploy(
+        [alice.address,bob.address,carol.address],
+        2
+    );
+
     const voiders = await VoidersFactory.deploy(
         "Voiders Genesis",
         "VoidGen",
@@ -41,7 +48,7 @@ async function deployERC721Fixture() {
     ) as VoidersGenesis;
     return {
         BASE_URI,
-        owner, otherAccount,
+        owner, otherAccount,alice,bob,carol,
         whitelister, treasury,
         PROXY_REG_ADDRESS, PRESALE_START_TIME,
         voiders, VoidersFactory
@@ -95,6 +102,72 @@ describe("ERC", function () {
         const { voiders, treasury } = await loadFixture(deployERC721Fixture);
         expect(await voiders.balanceOf(treasury.address)).to.eq(25);
     });
+
+    describe("Treasury", function () {
+        it("Should check treasury sending funds", async function () {
+            const { voiders, treasury,alice,bob,carol, owner } = await loadFixture(deployERC721Fixture);
+
+            const hash = await treasury.getTransfer721Hash(
+                await treasury.nextProposalIndex(),
+                voiders.address,
+                owner.address,
+                0
+            );
+
+            const sign1 = await alice.signMessage(ethers.utils.arrayify(hash));
+            const sign2 = await bob.signMessage(ethers.utils.arrayify(hash));
+            const sign3 = await carol.signMessage(ethers.utils.arrayify(hash));
+
+            const concatenated = sign1+sign2.slice(2)+sign3.slice(2);
+
+            const initBalance = await voiders.balanceOf(owner.address);
+
+            await treasury.connect(alice).transfer721(
+                voiders.address,
+                owner.address,
+                0,
+                concatenated
+            )
+
+            const nextBalance = await voiders.balanceOf(owner.address);
+
+            expect(nextBalance).to.eq(initBalance.add(1));
+
+        });
+
+        it("Should check treasury bulk sending funds", async function () {
+            const { voiders, treasury,alice,bob,carol, owner } = await loadFixture(deployERC721Fixture);
+
+            const hash = await treasury.getBulkTransfer721Hash(
+                await treasury.nextProposalIndex(),
+                voiders.address,
+                owner.address,
+                [0,1,2,3,4]
+            )
+
+            const sign1 = await alice.signMessage(ethers.utils.arrayify(hash));
+            const sign2 = await bob.signMessage(ethers.utils.arrayify(hash));
+            const sign3 = await carol.signMessage(ethers.utils.arrayify(hash));
+
+            const concatenated = sign1+sign2.slice(2)+sign3.slice(2);
+
+            const initBalance = await voiders.balanceOf(owner.address);
+
+            await treasury.connect(alice).bulkTransfer721(
+                voiders.address,
+                owner.address,
+                [0,1,2,3,4],
+                concatenated
+            )
+
+            const nextBalance = await voiders.balanceOf(owner.address);
+
+            expect(nextBalance).to.eq(initBalance.add(5));
+        });
+
+
+    });
+
     describe("Presale", function () {
         const PRESALE_PRICE = ethers.utils.parseEther("0.25");
         it("Should check whitelister", async function () {
