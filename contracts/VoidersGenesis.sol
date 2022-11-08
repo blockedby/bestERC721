@@ -83,7 +83,7 @@ contract VoidersGenesis is ERC721A, Ownable {
     }
 
     /**
-     * @dev Mints the rest of the tokens to owner for selling.
+     * @dev Withdraws presell rewards.
      */
     function ownerWithdrawETH() external onlyOwner {
         payable(msg.sender).transfer(address(this).balance);

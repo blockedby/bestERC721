@@ -274,7 +274,7 @@ function ownerWithdrawETH() external nonpayable
 
 
 
-*Mints the rest of the tokens to owner for selling.*
+*Withdraws presell rewards.*
 
 
 ### presaleEndTime

@@ -1,0 +1,8 @@
+{
+    "name": "Voiders Genesis",
+    "description": "Voiders Genesis.",
+    "image": "ipfs://QmdVbUFHSb7NbafdJTjsuSvUEwjJjcfF4zyMh3JsHmhPYA",
+    "external_link": "https://mint.voiders.gg",
+    "seller_fee_basis_points": 750,
+    "fee_recipient": "0xb2D5465D493d95840a24cbCb2493c8Ae7c7b263A"
+}
