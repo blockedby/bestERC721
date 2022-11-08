@@ -266,6 +266,17 @@ function ownerOf(uint256 tokenId) external view returns (address)
 |---|---|---|
 | _0 | address | undefined |
 
+### ownerWithdrawETH
+
+```solidity
+function ownerWithdrawETH() external nonpayable
+```
+
+
+
+*Mints the rest of the tokens to owner for selling.*
+
+
 ### presaleEndTime
 
 ```solidity

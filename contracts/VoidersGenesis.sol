@@ -42,7 +42,7 @@ contract VoidersGenesis is ERC721A, Ownable {
         require(_treasury != address(0), "Invalid treasury address");
         _mintERC2309(_treasury, 25);
         presaleStartTime = _presaleStartTime;
-        presaleEndTime = _presaleStartTime + 3 hours;
+        presaleEndTime = _presaleStartTime + 24 hours;
     }
 
     /**
@@ -80,6 +80,13 @@ contract VoidersGenesis is ERC721A, Ownable {
         );
         uint256 numToMint = maxTotalSupply - totalSupply();
         _mintTo(msg.sender, numToMint);
+    }
+
+    /**
+     * @dev Mints the rest of the tokens to owner for selling.
+     */
+    function ownerWithdrawETH() external onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
     }
 
     /**

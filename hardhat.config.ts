@@ -10,7 +10,7 @@ const config: HardhatUserConfig = {
 		mainnet: {
 			url: process.env.MAINNET_URL || "",
 			accounts: {
-				mnemonic: process.env.MNEMONIC || "",
+				mnemonic: process.env.MNEMONIC_PROD || "",
 				path: "m/44'/60'/0'/0",
 				initialIndex: 0,
 				count: 50,
@@ -53,8 +53,8 @@ const config: HardhatUserConfig = {
 
 			forking: {
 				// url: process.env.BSC_TESTNET_URL || "",
-				url: process.env.GOERLI_URL || "",
-				// url: process.env.ETH_URL || "",
+				// url: process.env.GOERLI_URL || "",
+				url: process.env.ETH_URL || "",
 				// blockNumber: 14679873,
 			}
 		},

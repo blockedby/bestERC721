@@ -1,0 +1,13 @@
+{
+    "name": "Voiders Genesis",
+    "description": "Unrevealed Voiders",
+    "external_url": "https://mint.voiders.gg",
+    "image": "ipfs://QmdVbUFHSb7NbafdJTjsuSvUEwjJjcfF4zyMh3JsHmhPYA",
+    "animation_url": "ipfs://QmNs94PHs7dmk2s9YyF6EvN9MNDfbyeMChWQiesvVFD95D",
+    "attributes": [
+        {
+            "trait_type": "Type",
+            "value": "Unrevealed"
+        }
+    ]
+}
