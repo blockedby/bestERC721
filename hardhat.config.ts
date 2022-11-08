@@ -8,7 +8,7 @@ dot.config();
 const config: HardhatUserConfig = {
 	networks: {
 		mainnet: {
-			url: process.env.MAINNET_URL || "",
+			url: process.env.ETH_URL || "",
 			// accounts: {
 			// 	mnemonic: process.env.MNEMONIC_PROD || "",
 			// 	path: "m/44'/60'/0'/0",
@@ -16,6 +16,7 @@ const config: HardhatUserConfig = {
 			// 	count: 50,
 			// 	passphrase: "",
 			// }
+			gasPrice: 20500000000,
 			accounts:
 				process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
 		},
@@ -47,7 +48,7 @@ const config: HardhatUserConfig = {
 				mnemonic: process.env.MNEMONIC || "",
 				path: "m/44'/60'/0'/0",
 				initialIndex: 0,
-				count: 900,
+				count: 5,
 				passphrase: "",
 			},
 			// accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
@@ -75,6 +76,7 @@ const config: HardhatUserConfig = {
 
 	etherscan: {
 		apiKey: {
+			mainnet: process.env.ETHERSCAN__MAINNET_API_KEY || "",
 			bscTestnet: process.env.ETHERSCAN__BSC_API_KEY || "",
 			goerli: process.env.ETHERSCAN__MAINNET_API_KEY || "",
 		},

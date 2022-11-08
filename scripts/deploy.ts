@@ -23,28 +23,29 @@ async function main() {
   const PRESALE_START_TIME = 1667923680;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
-  await delay(20000);
+  // await delay(20000);
  
   const treasuryFactory = (await ethers.getContractFactory("VoidersTreasury")) as VoidersTreasury__factory;
-  const treasury = await treasuryFactory.deploy(
-    [OWNER1, OWNER2, OWNER3],
-    2
-  ) as VoidersTreasury;
+  // const treasury = await treasuryFactory.deploy(
+  //   [OWNER1, OWNER2, OWNER3],
+  //   2
+  // ) as VoidersTreasury;
 
-  await treasury.deployed();
+  // await treasury.deployed();
+  const treasury = treasuryFactory.attach("0x06558049628e217b8277836C0237e4C64e452225")
 
   console.log("VoidersTreasury deployed to:", treasury.address);
 
-  await delay(20000);
+  // await delay(20000);
 
-  await hre.run("verify:verify", {
-    address: treasury.address,
-    constructorArguments: [
-      [OWNER1, OWNER2, OWNER3],
-      2
-    ],
+  // await hre.run("verify:verify", {
+  //   address: treasury.address,
+  //   constructorArguments: [
+  //     [OWNER1, OWNER2, OWNER3],
+  //     2
+  //   ],
 
-  });
+  // });
 
 
 
@@ -57,6 +58,9 @@ async function main() {
     PRESALE_START_TIME,
     treasury.address,
     WHITELISTER,
+    {
+      nonce: 1
+    }
   ) as VoidersGenesis;
 
   await voiders.deployed();
