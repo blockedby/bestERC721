@@ -18,32 +18,33 @@ async function main() {
   const OWNER2 = owner2.address;
   const OWNER3 = owner3.address;
 
-  const BASE_URI = "ipfs://QmWr2hWrDacU86wk1mCwc5TTtycpKxkB85dprK3gaS2Rfw/";
-  const CONTRACT_URI = "ipfs://QmWr2hWrDacU86wk1mCwc5TTtycpKxkB85dprK3gaS2Rfw/";
+  const BASE_URI = "ipfs://QmTCmK5HhDi22W14kkyjCkMCSyjFqA8TAL5a3QYjy3fyfn/";
+  const CONTRACT_URI = "ipfs://QmTCmK5HhDi22W14kkyjCkMCSyjFqA8TAL5a3QYjy3fyfn/";
   const PRESALE_START_TIME = 1667902080;
   // const PRESALE_START_TIME = 1667923680;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
  
   const treasuryFactory = (await ethers.getContractFactory("VoidersTreasury")) as VoidersTreasury__factory;
-  const treasury = await treasuryFactory.deploy(
-    [OWNER1, OWNER2, OWNER3],
-    2
-  ) as VoidersTreasury;
+  // const treasury = await treasuryFactory.deploy(
+  //   [OWNER1, OWNER2, OWNER3],
+  //   2
+  // ) as VoidersTreasury;
 
-  await treasury.deployed();
+  // await treasury.deployed();
+  const treasury = treasuryFactory.attach("0xd3b4FC804218553Ef1FCB043C8993F75858BB105")
   console.log("VoidersTreasury deployed to:", treasury.address);
 
   await delay(20000);
 
-  await hre.run("verify:verify", {
-    address: treasury.address,
-    constructorArguments: [
-      [OWNER1, OWNER2, OWNER3],
-      2
-    ],
+  // await hre.run("verify:verify", {
+  //   address: treasury.address,
+  //   constructorArguments: [
+  //     [OWNER1, OWNER2, OWNER3],
+  //     2
+  //   ],
 
-  });
+  // });
 
 
 

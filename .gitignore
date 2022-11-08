@@ -6,6 +6,8 @@ typechain
 typechain-types
 _ignore
 
+scripts/signMe.ts
+
 #Hardhat files
 cache
 artifacts
