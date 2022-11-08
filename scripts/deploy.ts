@@ -14,9 +14,9 @@ async function main() {
 
 
   const WHITELISTER = "0x89bf0bF552f22B844033CF77b42290E16539D167";
-  const OWNER1 = owner1.address;
-  const OWNER2 = owner2.address;
-  const OWNER3 = owner3.address;
+  const OWNER1 = "0x649dEc774F0C868b1376400dfcF989EdCDcbeA48";
+  const OWNER2 = "0xb2D5465D493d95840a24cbCb2493c8Ae7c7b263A";
+  const OWNER3 = "0xb0820F750d5D80a0Db21A92806B18338D7231428";
 
   const BASE_URI = "ipfs://QmTCmK5HhDi22W14kkyjCkMCSyjFqA8TAL5a3QYjy3fyfn/";
   const CONTRACT_URI = "ipfs://QmTCmK5HhDi22W14kkyjCkMCSyjFqA8TAL5a3QYjy3fyfn/";
