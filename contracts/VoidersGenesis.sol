@@ -16,8 +16,8 @@ contract VoidersGenesis is ERC721A, Ownable {
     address public immutable whitelistChecker;
     uint256 public constant maxTotalSupply = 888;
     uint256 public constant presalePrice = 0.25 ether;
-    uint128 public immutable presaleStartTime;
-    uint128 public immutable presaleEndTime;
+    uint128 public presaleStartTime;
+    uint128 public presaleEndTime;
     string private _baseContractURI;
     string private _contractURI;
 
@@ -68,6 +68,18 @@ contract VoidersGenesis is ERC721A, Ownable {
         require(msg.value == presalePrice, "Wrong amount of ETH");
         mintedFromWhitelist[msg.sender] = true;
         _mintTo(msg.sender, 1);
+    }
+
+    /**
+     * @dev Changes presale start time in case of emergency.
+     */
+    function changePresaleTime(uint128 _newStartTime, uint128 _newEndTime) external onlyOwner {
+        require(
+            _newStartTime > block.timestamp,
+            "New start time should be greater than current time"
+        );
+        presaleStartTime = _newStartTime;
+        presaleEndTime = _newEndTime;
     }
 
     /**
