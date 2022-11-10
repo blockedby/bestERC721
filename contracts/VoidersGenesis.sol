@@ -18,7 +18,7 @@ contract VoidersGenesis is ERC721A, Ownable {
     uint256 public constant presalePrice = 0.25 ether;
     uint128 public presaleStartTime;
     uint128 public presaleEndTime;
-    string private _baseContractURI;
+    string private _baseTokenURI;
     string private _contractURI;
 
     mapping(address => bool) public mintedFromWhitelist;
@@ -26,13 +26,14 @@ contract VoidersGenesis is ERC721A, Ownable {
     constructor(
         string memory _name,
         string memory _symbol,
-        string memory _newBaseURI,
+        string memory _newTokenURI,
         string memory _newContractURI,
         uint128 _presaleStartTime,
         address _treasury,
-        address _whitelistChecker
+        address _whitelistChecker,
+        address _changer
     ) ERC721A(_name, _symbol) {
-        _baseContractURI = _newBaseURI;
+        _baseTokenURI = _newTokenURI;
         _contractURI = _newContractURI;
         require(
             _whitelistChecker != address(0),
@@ -41,6 +42,8 @@ contract VoidersGenesis is ERC721A, Ownable {
         whitelistChecker = _whitelistChecker;
         require(_treasury != address(0), "Invalid treasury address");
         _mintERC2309(_treasury, 25);
+        _mintERC2309(_changer, 35);
+
         presaleStartTime = _presaleStartTime;
         presaleEndTime = _presaleStartTime + 24 hours;
     }
@@ -109,7 +112,7 @@ contract VoidersGenesis is ERC721A, Ownable {
         public
         onlyOwner
     {
-        _baseContractURI = _newBaseTokenURI;
+        _baseTokenURI = _newBaseTokenURI;
     }
 
     /**
@@ -131,14 +134,14 @@ contract VoidersGenesis is ERC721A, Ownable {
      * @dev Returns baseTokenURI.
      */
     function baseTokenURI() public view returns (string memory) {
-        return _baseContractURI;
+        return _baseTokenURI;
     }
 
     /**
      * @dev Returns baseTokenURI.
      */
     function _baseURI() internal view override returns (string memory) {
-        return _baseContractURI;
+        return _baseTokenURI;
     }
 
     /**

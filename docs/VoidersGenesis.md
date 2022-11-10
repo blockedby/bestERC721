@@ -98,6 +98,23 @@ function changeContractURI(string _newContractURI) external nonpayable
 |---|---|---|
 | _newContractURI | string | new URI for all tokens |
 
+### changePresaleTime
+
+```solidity
+function changePresaleTime(uint128 _newStartTime, uint128 _newEndTime) external nonpayable
+```
+
+
+
+*Changes presale start time in case of emergency.*
+
+#### Parameters
+
+| Name | Type | Description |
+|---|---|---|
+| _newStartTime | uint128 | undefined |
+| _newEndTime | uint128 | undefined |
+
 ### contractURI
 
 ```solidity
