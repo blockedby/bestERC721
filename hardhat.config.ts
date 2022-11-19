@@ -16,7 +16,7 @@ const config: HardhatUserConfig = {
 			// 	count: 50,
 			// 	passphrase: "",
 			// }
-			gasPrice: 20500000000,
+			gasPrice: 23500000000,
 			accounts:
 				process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
 		},
