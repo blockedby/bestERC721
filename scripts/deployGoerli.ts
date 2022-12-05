@@ -14,15 +14,15 @@ async function main() {
 
   const WHITELISTER = "0x89bf0bF552f22B844033CF77b42290E16539D167";
 
-  const MAIN_OWNER = "0xb2D5465D493d95840a24cbCb2493c8Ae7c7b263A";
-  const OWNER1 = "0x649dEc774F0C868b1376400dfcF989EdCDcbeA48";
-  const OWNER2 = "0xb2D5465D493d95840a24cbCb2493c8Ae7c7b263A";
-  const OWNER3 = "0xb0820F750d5D80a0Db21A92806B18338D7231428";
+  const MAIN_OWNER = deployer.address;
+  const OWNER1 = owner1.address;
+  const OWNER2 = owner2.address;
+  const OWNER3 = owner3.address;
 
   const BASE_URI = "ipfs://QmTCmK5HhDi22W14kkyjCkMCSyjFqA8TAL5a3QYjy3fyfn/";
   const CONTRACT_URI = "ipfs://QmUYavKi6vW6hDapPPA1zMBJCPUN6S826hbuEdYpWfEJ4o";
   // const PRESALE_START_TIME = 1667902080;
-  const PRESALE_START_TIME = 1667923680;
+  const PRESALE_START_TIME = 1668082590;
   console.log("PRESALE_START_TIME", PRESALE_START_TIME);
 
   // await delay(20000);
@@ -34,20 +34,20 @@ async function main() {
   // ) as VoidersTreasury;
 
   // await treasury.deployed();
-  const treasury = treasuryFactory.attach("0x06558049628e217b8277836C0237e4C64e452225")
+  const treasury = treasuryFactory.attach("0x06558049628e217b8277836c0237e4c64e452225")
 
   console.log("VoidersTreasury deployed to:", treasury.address);
 
-  await delay(20000);
+  // await delay(20000);
 
-  await hre.run("verify:verify", {
-    address: treasury.address,
-    constructorArguments: [
-      [OWNER1, OWNER2, OWNER3],
-      2
-    ],
+  // await hre.run("verify:verify", {
+  //   address: treasury.address,
+  //   constructorArguments: [
+  //     [OWNER1, OWNER2, OWNER3],
+  //     2
+  //   ],
 
-  });
+  // });
 
 
 
@@ -78,13 +78,10 @@ async function main() {
       CONTRACT_URI,
       PRESALE_START_TIME,
       treasury.address,
-      WHITELISTER
+      WHITELISTER,
+      MAIN_OWNER
     ],
-
   });
-
-
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere
